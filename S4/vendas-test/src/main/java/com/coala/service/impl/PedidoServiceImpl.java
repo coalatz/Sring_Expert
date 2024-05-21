@@ -8,9 +8,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coala.domain.entity.*;
+import com.coala.domain.enums.StatusPedido;
 import com.coala.domain.repository.*;
 
-import com.coala.exception.RegraNegocioException;
+import com.coala.exception.*;
 
 import com.coala.rest.dto.ItemPedidoDTO;
 import com.coala.rest.dto.PedidoDTO;
@@ -63,6 +64,7 @@ public Pedido salvar(PedidoDTO dto) {
     itemsPedidoRepository.saveAll(itemsPedido);
     //passando os itens salvos pro pedido 
     pedido.setItens(itemsPedido);
+    pedido.setStatus(StatusPedido.REALIZADO);
 
     return pedido;
 }
@@ -91,5 +93,22 @@ public Pedido salvar(PedidoDTO dto) {
             return itemPedido;
         }).collect(Collectors.toList());
     }    
+
+    @Override
+    public Optional<Pedido> obterPedidoCompleto(Integer id) {
+        return respository.findByIdFetchItens(id);
+    }
+
+    @Override
+    @Transactional
+    public void ataulizaStatus(Integer id, StatusPedido statusPedido) {
+        respository.findById(id)
+        .map( p -> {
+            p.setStatus(statusPedido);
+            respository.save(p);
+            return p;
+        })
+        .orElseThrow(() -> new PedidoNaoEncontradoExcepetion());
+    }
 
 }

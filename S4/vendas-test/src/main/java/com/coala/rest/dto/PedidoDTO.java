@@ -10,7 +10,7 @@ public class PedidoDTO {
     private BigDecimal total;
     private List<ItemPedidoDTO> items;
 
-    public PedidoDTO(Integer cliente, BigDecimal total, List<ItemPedidoDTO> items) {
+    public PedidoDTO(Integer cliente, BigDecimal total,  List<ItemPedidoDTO> items) {
         this.cliente = cliente;
         this.total = total;
         this.items = items;
@@ -35,7 +35,6 @@ public class PedidoDTO {
     public void setItens(List<ItemPedidoDTO> items) {
         this.items = items;
     }
-
     
 
 }
